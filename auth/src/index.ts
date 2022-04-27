@@ -1,4 +1,5 @@
 import express from 'express';
+require('express-async-errors');
 import { currentUserRouter, signInRouter, signOutRouter, signUpRouter } from './routes';
 import { errorMiddleware } from './middlewares';
 import { RouteNotFoundError } from './errors';
@@ -20,5 +21,5 @@ app.all('*', () => {
 app.use(errorMiddleware);
 
 app.listen(3000, () => {
-  console.log('Listening on port 3000!');
+  console.log('Listening on port 3000');
 });
