@@ -4,3 +4,4 @@ export * from './customError';
 export * from './routeNotFoundError';
 export * from './emailInUseError';
 export * from './userNotFoundError';
+export * from './unathorizedError';
