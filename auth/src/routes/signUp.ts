@@ -32,7 +32,9 @@ router.post(
 
     await user.save();
 
-    const token = jwt.sign({ id: user.id, email: user.email }, 'xxxx');
+    const jwtSecret = process.env.JWT_SECRET;
+
+    const token = jwt.sign({ id: user.id, email: user.email }, jwtSecret as string);
 
     req.session = { token };
 

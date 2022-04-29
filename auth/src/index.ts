@@ -33,6 +33,10 @@ app.all('*', () => {
 app.use(errorMiddleware);
 
 const startApp = async () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined');
+  }
+
   try {
     await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
     console.log('Connected to mongodb');
