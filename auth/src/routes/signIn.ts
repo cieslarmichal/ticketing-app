@@ -1,6 +1,11 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { UserNotFoundError } from '../errors';
+import { User } from '../models';
 import { validateRequestMiddleware } from '../middlewares';
+import { HashService } from '../services';
+import { StatusCodes } from 'http-status-codes';
 
 const router = express.Router();
 
@@ -11,8 +16,28 @@ router.post(
     body('password').trim().notEmpty().withMessage('Password not provided'),
     validateRequestMiddleware,
   ],
-  (req: Request, res: Response) => {
-    res.send({});
+  async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      throw new UserNotFoundError();
+    }
+
+    const passwordsMatch = await HashService.compare(password, existingUser.password);
+
+    if (!passwordsMatch) {
+      throw new UserNotFoundError();
+    }
+
+    const jwtSecret = process.env.JWT_SECRET;
+
+    const token = jwt.sign({ id: existingUser.id, email: existingUser.email }, jwtSecret as string);
+
+    req.session = { token };
+
+    res.status(StatusCodes.OK).send(existingUser);
   },
 );
 
