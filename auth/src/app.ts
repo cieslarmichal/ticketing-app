@@ -6,29 +6,36 @@ import { currentUserRouter, signInRouter, signOutRouter, signUpRouter } from './
 import { errorMiddleware } from './middlewares';
 import { RouteNotFoundError } from './errors';
 
-const app = express();
+export class App {
+  public instance: express.Application;
 
-app.set('trust proxy', true);
+  public constructor() {
+    this.instance = express();
+    this.setup();
+  }
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(helmet());
-app.use(
-  cookieSession({
-    signed: false,
-    secure: true,
-  }),
-);
+  private async setup() {
+    this.instance.set('trust proxy', true);
 
-app.use(signUpRouter);
-app.use(signInRouter);
-app.use(signOutRouter);
-app.use(currentUserRouter);
+    this.instance.use(express.json());
+    this.instance.use(express.urlencoded({ extended: false }));
+    this.instance.use(helmet());
+    this.instance.use(
+      cookieSession({
+        signed: false,
+        secure: true,
+      }),
+    );
 
-app.all('*', () => {
-  throw new RouteNotFoundError();
-});
+    this.instance.use(signUpRouter);
+    this.instance.use(signInRouter);
+    this.instance.use(signOutRouter);
+    this.instance.use(currentUserRouter);
 
-app.use(errorMiddleware);
+    this.instance.all('*', () => {
+      throw new RouteNotFoundError();
+    });
 
-export { app };
+    this.instance.use(errorMiddleware);
+  }
+}

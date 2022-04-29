@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
-import { app } from './app';
+import { App } from './app';
+import { Server } from './server';
 
-const startApp = async () => {
+async function main() {
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined');
   }
@@ -13,9 +14,11 @@ const startApp = async () => {
     console.log(error);
   }
 
-  app.listen(3000, () => {
-    console.log('Listening on port 3000');
-  });
-};
+  const app = new App();
 
-startApp();
+  const server = new Server(app.instance);
+
+  server.listen();
+}
+
+main();
