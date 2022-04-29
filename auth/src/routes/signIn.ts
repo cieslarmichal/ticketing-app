@@ -31,9 +31,9 @@ router.post(
       throw new UserNotFoundError();
     }
 
-    const jwtSecret = process.env.JWT_SECRET;
+    const jwtSecret = process.env.JWT_SECRET as string;
 
-    const token = jwt.sign({ id: existingUser.id, email: existingUser.email }, jwtSecret as string);
+    const token = jwt.sign({ id: existingUser.id, email: existingUser.email }, jwtSecret);
 
     req.session = { token };
 
