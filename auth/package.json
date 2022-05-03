@@ -5,7 +5,7 @@
   "main": "main.ts",
   "scripts": {
     "start": "ts-node-dev --poll src/main.ts",
-    "test": "jest --watchAll --no-cache"
+    "test": "jest --watchAll --no-cache --runInBand"
   },
   "jest": {
     "preset": "ts-jest",
