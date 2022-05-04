@@ -49,11 +49,12 @@ describe(`Get ticket`, () => {
 
   it('returns not found when ticket with given id does not exist', async () => {
     const email = 'email@gmail.com';
-    const id = new mongoose.Types.ObjectId().toHexString();
+    const id = 'asdasd';
+    const ticketId = new mongoose.Types.ObjectId().toHexString();
 
     const cookie = signUp({ email, id });
 
-    const response = await request(server.instance).get(`${baseUrl}/xxx`).set('Cookie', cookie).send();
+    const response = await request(server.instance).get(`${baseUrl}/${ticketId}`).set('Cookie', cookie).send();
 
     expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
