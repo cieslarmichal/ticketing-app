@@ -7,9 +7,13 @@ async function main() {
     throw new Error('JWT_SECRET is not defined');
   }
 
+  if (!process.env.MONGO_URI) {
+    throw new Error('MONGO_URI is not defined');
+  }
+
   try {
-    await mongoose.connect('mongodb://tickets-mongo-srv:27017/auth');
-    console.log('Connected to mongodb');
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log(`Connected to ${process.env.MONGO_URI}`);
   } catch (error) {
     console.log(error);
   }
