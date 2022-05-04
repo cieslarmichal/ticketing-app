@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 
 const baseUrl = '/api/tickets';
 
-describe(`Get ticket)`, () => {
+describe(`Get ticket`, () => {
   let server: Server;
 
   beforeEach(async () => {

@@ -7,7 +7,7 @@ import { Ticket } from '../../models';
 
 const baseUrl = '/api/tickets';
 
-describe(`Create ticket)`, () => {
+describe(`Create ticket`, () => {
   let server: Server;
 
   beforeEach(async () => {
