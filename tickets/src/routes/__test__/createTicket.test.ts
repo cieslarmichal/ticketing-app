@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Server } from '../../server';
 import { App } from '../../app';
 import { signUp } from '../../test';
+import { Ticket } from '../../models';
 
 const baseUrl = '/api/tickets';
 
@@ -34,7 +35,6 @@ describe(`Create ticket)`, () => {
     const price = 50;
 
     const email = 'email@gmail.com';
-
     const id = '1';
 
     const cookie = signUp({ email, id });
@@ -49,7 +49,6 @@ describe(`Create ticket)`, () => {
     const price = 'asdadas';
 
     const email = 'email@gmail.com';
-
     const id = '1';
 
     const cookie = signUp({ email, id });
@@ -60,11 +59,13 @@ describe(`Create ticket)`, () => {
   });
 
   it('creates a ticket when valid inputs are provided', async () => {
+    let tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(0);
+
     const title = 'title';
     const price = 50;
 
     const email = 'email@gmail.com';
-
     const id = '1';
 
     const cookie = signUp({ email, id });
@@ -72,7 +73,15 @@ describe(`Create ticket)`, () => {
     const response = await request(server.instance).post(baseUrl).set('Cookie', cookie).send({ title, price });
 
     expect(response.statusCode).toBe(StatusCodes.CREATED);
+
+    tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(1);
+
+    expect(tickets[0].title).toBe(title);
+    expect(tickets[0].price).toBe(price);
+
     expect(response.body.title).toBe(title);
-    expect(response.body.price).toBe(title);
+    expect(response.body.price).toBe(price);
+    expect(response.body.userId).toBe(id);
   });
 });

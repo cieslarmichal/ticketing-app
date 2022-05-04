@@ -3,6 +3,7 @@ import { authMiddleware, currentUserMiddleware } from '@cieslar-ticketing-common
 import { validateRequestMiddleware } from '@cieslar-ticketing-common/common';
 import { body } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
+import { Ticket } from '../models';
 
 const router = express.Router();
 
@@ -15,8 +16,14 @@ router.post(
     body('price').isFloat({ gt: 0 }).notEmpty().withMessage('Price must be greater than zero'),
     validateRequestMiddleware,
   ],
-  (req: Request, res: Response) => {
-    res.status(StatusCodes.CREATED).send();
+  async (req: Request, res: Response) => {
+    const { title, price } = req.body;
+
+    const ticket = Ticket.build({ title, price, userId: req.currentUser!.id });
+
+    await ticket.save();
+
+    res.status(StatusCodes.CREATED).send(ticket);
   },
 );
 
