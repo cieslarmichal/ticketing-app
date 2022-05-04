@@ -1,5 +1,5 @@
 import express from 'express';
-import { currentUserMiddleware } from '../middlewares';
+import { currentUserMiddleware } from '@cieslar-ticketing-common/common';
 
 const router = express.Router();
 

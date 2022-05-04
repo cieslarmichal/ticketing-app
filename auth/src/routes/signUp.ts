@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { User } from '../models';
 import { EmailInUseError } from '../errors';
 import { StatusCodes } from 'http-status-codes';
-import { validateRequestMiddleware } from '../middlewares';
+import { validateRequestMiddleware } from '@cieslar-ticketing-common/common';
 
 const router = express.Router();
 

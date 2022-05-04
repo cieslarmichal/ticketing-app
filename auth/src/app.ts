@@ -3,8 +3,7 @@ require('express-async-errors');
 import cookieSession from 'cookie-session';
 import helmet from 'helmet';
 import { currentUserRouter, signInRouter, signOutRouter, signUpRouter } from './routes';
-import { errorMiddleware } from './middlewares';
-import { RouteNotFoundError } from './errors';
+import { errorMiddleware, RouteNotFoundError } from '@cieslar-ticketing-common/common';
 
 export class App {
   public instance: express.Application;

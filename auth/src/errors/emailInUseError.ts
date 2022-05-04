@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { CustomError } from './customError';
+import { CustomError } from '@cieslar-ticketing-common/common';
 
 export class EmailInUseError extends CustomError {
   statusCode = StatusCodes.UNPROCESSABLE_ENTITY;

@@ -3,7 +3,7 @@ import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { UserNotFoundError } from '../errors';
 import { User } from '../models';
-import { validateRequestMiddleware } from '../middlewares';
+import { validateRequestMiddleware } from '@cieslar-ticketing-common/common';
 import { HashService } from '../services';
 import { StatusCodes } from 'http-status-codes';
 
