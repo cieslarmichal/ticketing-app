@@ -13,6 +13,8 @@ export const errorMiddleware = (
     return;
   }
 
+  console.log(err);
+
   res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
     .send({ errors: [{ message: err.message }] });
