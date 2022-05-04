@@ -1,12 +1,17 @@
-import request from 'supertest';
-import http from 'http';
+import jwt from 'jsonwebtoken';
 
-const singUpUrl = '/api/users/signup';
+export const signUp = (authPayload: { email: string; id: string }) => {
+  const jwtSecret = process.env.JWT_SECRET as string;
 
-export const signUp = async (credentials: { email: string; password: string }, server: http.Server) => {
-  const response = await request(server).post(singUpUrl).send(credentials);
+  const token = jwt.sign(authPayload, jwtSecret);
 
-  const cookie = response.get('Set-Cookie');
+  const session = { token };
 
-  return cookie;
+  const sessionJSON = JSON.stringify(session);
+
+  const sessionBase64 = Buffer.from(sessionJSON).toString('base64');
+
+  const cookie = `session=${sessionBase64}`;
+
+  return [cookie];
 };

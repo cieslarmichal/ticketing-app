@@ -23,6 +23,7 @@ export class App {
       cookieSession({
         signed: false,
         secure: process.env.NODE_ENV !== 'test',
+        name: 'session',
       }),
     );
 
