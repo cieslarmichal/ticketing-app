@@ -15,6 +15,14 @@ async function main() {
   try {
     await natsClient.connect('ticketing', 'random', 'http://nats-srv:4222');
 
+    natsClient.client.on('close', () => {
+      console.log('NATS connection closed!');
+      process.exit();
+    });
+
+    process.on('SIGINT', () => natsClient.client.close());
+    process.on('SIGTERM', () => natsClient.client.close());
+
     await mongoose.connect(process.env.MONGO_URI);
     console.log(`Connected to ${process.env.MONGO_URI}`);
   } catch (error) {
