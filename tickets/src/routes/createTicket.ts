@@ -4,6 +4,7 @@ import { validateRequestMiddleware } from '@cieslar-ticketing-common/common';
 import { body } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { Ticket } from '../models';
+// import { TicketCreatedPublisher } from '../events';
 
 const router = express.Router();
 
@@ -22,6 +23,13 @@ router.post(
     const ticket = Ticket.build({ title, price, userId: req.currentUser!.id });
 
     await ticket.save();
+
+    // new TicketCreatedPublisher(client).publish({
+    //   id: ticket.id,
+    //   title: ticket.title,
+    //   price: ticket.price,
+    //   userId: ticket.userId,
+    // });
 
     res.status(StatusCodes.CREATED).send(ticket);
   },

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { App } from './app';
+import { natsClient } from './events';
 import { Server } from './server';
 
 async function main() {
@@ -12,6 +13,8 @@ async function main() {
   }
 
   try {
+    await natsClient.connect('ticketing', 'random', 'http://nats-srv:4222');
+
     await mongoose.connect(process.env.MONGO_URI);
     console.log(`Connected to ${process.env.MONGO_URI}`);
   } catch (error) {
