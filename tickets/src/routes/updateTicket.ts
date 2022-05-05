@@ -6,6 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Ticket } from '../models';
 import { TicketNotFoundError, UserHasNoOwnershipOverTicket } from '../errors';
 import mongoose from 'mongoose';
+import { natsClient, TicketUpdatedPublisher } from '../events';
 
 const router = express.Router();
 
@@ -36,6 +37,13 @@ router.put(
     }
 
     await Ticket.updateOne({ _id: id }, { ...req.body });
+
+    await new TicketUpdatedPublisher(natsClient.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
 
     const updatedTicket = await Ticket.findById(id);
 
