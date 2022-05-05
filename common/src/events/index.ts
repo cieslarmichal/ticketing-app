@@ -3,3 +3,4 @@ export * from './eventBusPublisher';
 export * from './event';
 export * from './subject';
 export * from './ticketCreatedEvent';
+export * from './ticketUpdatedEvent';
