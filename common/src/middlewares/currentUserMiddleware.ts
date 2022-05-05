@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
 interface UserPayload {
   id: string;
@@ -14,11 +14,7 @@ declare global {
   }
 }
 
-export const currentUserMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const currentUserMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session?.token) {
     next();
     return;
