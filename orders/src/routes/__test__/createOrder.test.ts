@@ -6,7 +6,7 @@ import { signUp } from '../../test';
 import { Order, Ticket } from '../../models';
 import mongoose from 'mongoose';
 import { OrderStatus } from '@cieslar-ticketing-common/common';
-// import { natsClient } from '../../shared';
+import { natsClient } from '../../shared';
 
 const baseUrl = '/api/orders';
 
@@ -118,6 +118,6 @@ describe(`Create order`, () => {
     expect(response.body.userId).toBe(id);
     expect(response.body.ticket.id).toBe(ticket.id);
 
-    // expect(natsClient.client.publish).toHaveBeenCalled();
+    expect(natsClient.client.publish).toHaveBeenCalled();
   });
 });

@@ -6,6 +6,7 @@ import { signUp } from '../../test';
 import { Order, Ticket } from '../../models';
 import mongoose from 'mongoose';
 import { OrderStatus } from '@cieslar-ticketing-common/common';
+import { natsClient } from '../../shared';
 
 const baseUrl = '/api/orders';
 
@@ -134,6 +135,34 @@ describe(`Update order`, () => {
     const order = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket });
     await order.save();
 
+    const updatedStatus = OrderStatus.AwaitingPayment;
+
+    const response = await request(server.instance)
+      .patch(`${baseUrl}/${order.id}`)
+      .set('Cookie', cookie)
+      .send({ status: updatedStatus });
+
+    expect(response.statusCode).toBe(StatusCodes.OK);
+
+    expect(response.body.userId).toBe(userId);
+    expect(response.body.status).toBe(updatedStatus);
+  });
+
+  it('updates and publishes an event when order with given id exists and status is valid', async () => {
+    const email = 'email@gmail.com';
+    const userId = '1';
+
+    const cookie = signUp({ email, id: userId });
+
+    const title = 'title';
+    const price = 50;
+
+    const ticket = Ticket.build({ title, price });
+    await ticket.save();
+
+    const order = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket });
+    await order.save();
+
     const updatedStatus = OrderStatus.Cancelled;
 
     const response = await request(server.instance)
@@ -146,6 +175,6 @@ describe(`Update order`, () => {
     expect(response.body.userId).toBe(userId);
     expect(response.body.status).toBe(updatedStatus);
 
-    // expect(natsClient.client.publish).toHaveBeenCalled();
+    expect(natsClient.client.publish).toHaveBeenCalled();
   });
 });
