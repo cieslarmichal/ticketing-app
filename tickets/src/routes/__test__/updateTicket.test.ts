@@ -5,8 +5,7 @@ import { App } from '../../app';
 import { signUp } from '../../test';
 import { Ticket } from '../../models';
 import mongoose from 'mongoose';
-
-jest.mock('../../shared/natsClient');
+import { natsClient } from '../../shared';
 
 const baseUrl = '/api/tickets';
 
@@ -139,5 +138,7 @@ describe(`Update ticket`, () => {
     expect(response.body.title).toBe(updatedTitle);
     expect(response.body.price).toBe(updatedPrice);
     expect(response.body.userId).toBe(userId);
+
+    expect(natsClient.client.publish).toHaveBeenCalled();
   });
 });

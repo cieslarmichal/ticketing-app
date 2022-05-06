@@ -4,8 +4,7 @@ import { Server } from '../../server';
 import { App } from '../../app';
 import { signUp } from '../../test';
 import { Ticket } from '../../models';
-
-jest.mock('../../shared/natsClient');
+import { natsClient } from '../../shared';
 
 const baseUrl = '/api/tickets';
 
@@ -85,5 +84,7 @@ describe(`Create ticket`, () => {
     expect(response.body.title).toBe(title);
     expect(response.body.price).toBe(price);
     expect(response.body.userId).toBe(id);
+
+    expect(natsClient.client.publish).toHaveBeenCalled();
   });
 });

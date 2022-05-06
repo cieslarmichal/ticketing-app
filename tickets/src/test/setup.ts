@@ -1,6 +1,8 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
+jest.mock('../shared/natsClient');
+
 let mongo: MongoMemoryServer;
 
 beforeAll(async () => {
@@ -14,6 +16,8 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks();
+
   const collections = await mongoose.connection.db.collections();
 
   for (let collection of collections) {
