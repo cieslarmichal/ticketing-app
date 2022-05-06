@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { App } from './app';
-import { natsClient } from './events';
+import { natsClient } from './shared';
 import { Server } from './server';
 
 async function main() {
@@ -12,8 +12,20 @@ async function main() {
     throw new Error('MONGO_URI is not defined');
   }
 
+  if (!process.env.NATS_URL) {
+    throw new Error('NATS_URL is not defined');
+  }
+
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error('NATS_CLUSTER_ID is not defined');
+  }
+
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error('NATS_CLIENT_ID is not defined');
+  }
+
   try {
-    await natsClient.connect('ticketing', 'random', 'http://nats-srv:4222');
+    await natsClient.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URL);
 
     natsClient.client.on('close', () => {
       console.log('NATS connection closed!');
