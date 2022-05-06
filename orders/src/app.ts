@@ -3,7 +3,7 @@ require('express-async-errors');
 import cookieSession from 'cookie-session';
 import helmet from 'helmet';
 import { errorMiddleware, RouteNotFoundError } from '@cieslar-ticketing-common/common';
-import { createOrderRouter, getOrdersRouter } from './routes';
+import { createOrderRouter, getOrderRouter, getOrdersRouter } from './routes';
 
 export class App {
   public instance: express.Application;
@@ -29,6 +29,7 @@ export class App {
 
     this.instance.use(createOrderRouter);
     this.instance.use(getOrdersRouter);
+    this.instance.use(getOrderRouter);
 
     this.instance.all('*', () => {
       throw new RouteNotFoundError();
