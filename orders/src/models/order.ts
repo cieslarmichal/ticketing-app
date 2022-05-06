@@ -1,15 +1,17 @@
+import { OrderStatus } from '@cieslar-ticketing-common/common';
 import mongoose from 'mongoose';
+import { TicketDocument } from './ticket';
 
 interface OrderAttributes {
   userId: string;
-  status: string;
+  status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDocument;
 }
 
 interface OrderDocument extends mongoose.Document {
   userId: string;
-  status: string;
+  status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDocument;
 }
@@ -27,6 +29,8 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
+      enum: Object.values(OrderStatus),
+      default: OrderStatus.Created,
     },
     expiresAt: {
       type: mongoose.Schema.Types.Date,
