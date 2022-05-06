@@ -58,6 +58,27 @@ describe(`Get order`, () => {
     expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
+  it('returns forbidden when user requests order which he does not own', async () => {
+    const email = 'email@gmail.com';
+    const userId = '1';
+    const otherUserId = '2';
+
+    const cookie = signUp({ email, id: otherUserId });
+
+    const title = 'title';
+    const price = 50;
+
+    const ticket = Ticket.build({ title, price });
+    await ticket.save();
+
+    const order = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket });
+    await order.save();
+
+    const response = await request(server.instance).get(`${baseUrl}/${order.id}`).set('Cookie', cookie).send();
+
+    expect(response.statusCode).toBe(StatusCodes.FORBIDDEN);
+  });
+
   it('returns an order when order with given id exists', async () => {
     const email = 'email@gmail.com';
     const userId = '1';
