@@ -24,6 +24,6 @@
     "importHelpers": true,
     "esModuleInterop": true,
     "strictPropertyInitialization": false,
-    "noUnusedLocals": true,
+    "noUnusedLocals": true
   }
 }
