@@ -4,7 +4,8 @@ import { validateRequestMiddleware } from '@cieslar-ticketing-common/common';
 import { body } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { Ticket } from '../models';
-import { natsClient, TicketCreatedPublisher } from '../events';
+import { TicketCreatedPublisher } from '../events';
+import { natsClient } from '../shared';
 
 const router = express.Router();
 

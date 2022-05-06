@@ -6,6 +6,8 @@ import { signUp } from '../../test';
 import { Ticket } from '../../models';
 import mongoose from 'mongoose';
 
+jest.mock('../../shared/natsClient');
+
 const baseUrl = '/api/tickets';
 
 describe(`Update ticket`, () => {

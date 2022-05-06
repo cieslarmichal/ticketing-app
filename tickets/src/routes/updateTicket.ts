@@ -6,7 +6,8 @@ import { StatusCodes } from 'http-status-codes';
 import { Ticket } from '../models';
 import { TicketNotFoundError, UserHasNoOwnershipOverTicket } from '../errors';
 import mongoose from 'mongoose';
-import { natsClient, TicketUpdatedPublisher } from '../events';
+import { TicketUpdatedPublisher } from '../events';
+import { natsClient } from '../shared';
 
 const router = express.Router();
 

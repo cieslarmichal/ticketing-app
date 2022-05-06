@@ -5,6 +5,8 @@ import { App } from '../../app';
 import { signUp } from '../../test';
 import { Ticket } from '../../models';
 
+jest.mock('../../shared/natsClient');
+
 const baseUrl = '/api/tickets';
 
 describe(`Create ticket`, () => {
