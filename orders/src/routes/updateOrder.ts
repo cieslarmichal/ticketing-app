@@ -10,8 +10,8 @@ import { Order } from '../models';
 import { OrderNotFoundError, UserHasNoOwnershipOverOrder } from '../errors';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-// import { OrderUpdatedPublisher } from '../events';
-// import { natsClient } from '../shared';
+import { OrderCancelledPublisher } from '../events';
+import { natsClient } from '../shared';
 
 const router = express.Router();
 
@@ -32,7 +32,7 @@ router.patch(
       throw new OrderNotFoundError();
     }
 
-    const order = await Order.findById(id);
+    const order = await Order.findById(id).populate('ticket');
 
     if (!order) {
       throw new OrderNotFoundError();
@@ -47,14 +47,14 @@ router.patch(
     order.status = status;
     await order.save();
 
-    // await new OrderUpdatedPublisher(natsClient.client).publish({
-    //   id: order.id,
-    //   title: order.title,
-    //   price: order.price,
-    //   userId: order.userId,
-    // });
-
-    // const updatedOrder = await Order.findById(id);
+    if (order.status === OrderStatus.Cancelled) {
+      await new OrderCancelledPublisher(natsClient.client).publish({
+        id: order.id,
+        ticket: {
+          id: order.ticket.id,
+        },
+      });
+    }
 
     res.status(StatusCodes.OK).send(order);
   },

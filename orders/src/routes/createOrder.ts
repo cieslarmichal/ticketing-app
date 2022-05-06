@@ -10,6 +10,8 @@ import { StatusCodes } from 'http-status-codes';
 import { Order, Ticket } from '../models';
 import mongoose from 'mongoose';
 import { OrderAlreadyExistsError, TicketNotFoundError } from '../errors';
+import { OrderCreatedPublisher } from '../events';
+import { natsClient } from '../shared';
 
 const ORDER_EXPIRATION_TIME_IN_SECONDS = 15 * 60;
 
@@ -54,12 +56,16 @@ router.post(
 
     await order.save();
 
-    // await new OrderCreatedPublisher(natsClient.client).publish({
-    //   id: order.id,
-    //   title: order.title,
-    //   price: order.price,
-    //   userId: order.userId,
-    // });
+    await new OrderCreatedPublisher(natsClient.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price,
+      },
+    });
 
     res.status(StatusCodes.CREATED).send(order);
   },
