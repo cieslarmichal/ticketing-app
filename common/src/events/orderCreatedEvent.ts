@@ -5,6 +5,7 @@ export interface OrderCreatedEvent {
   subject: Subject.OrderCreated;
   data: {
     id: string;
+    version: number;
     status: OrderStatus;
     userId: string;
     expiresAt: string;
