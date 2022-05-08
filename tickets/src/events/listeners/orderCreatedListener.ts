@@ -1,6 +1,6 @@
 import { EventBusListener, Subject, OrderCreatedEvent } from '@cieslar-ticketing-common/common';
 import { Message } from 'node-nats-streaming';
-import { TicketNotFoundError } from 'src/errors';
+import { TicketNotFoundError } from '../../errors';
 import { Ticket } from '../../models';
 import { queueGroupName } from './queueGroupName';
 

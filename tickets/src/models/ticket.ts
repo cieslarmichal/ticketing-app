@@ -7,7 +7,7 @@ interface TicketAttributes {
   userId: string;
 }
 
-interface TicketDocument extends mongoose.Document {
+export interface TicketDocument extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
