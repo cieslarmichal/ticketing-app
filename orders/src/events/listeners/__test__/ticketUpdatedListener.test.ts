@@ -11,7 +11,7 @@ describe(`Receiving ticket updated event message`, () => {
   let data: TicketUpdatedEvent['data'];
   let message: Message;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     listener = new TicketUpdatedListener(natsClient.client);
 
     ticket = Ticket.build({
@@ -19,6 +19,7 @@ describe(`Receiving ticket updated event message`, () => {
       title: 'concert',
       price: 10,
     });
+    await ticket.save();
 
     data = {
       version: ticket.version + 1,
@@ -45,5 +46,19 @@ describe(`Receiving ticket updated event message`, () => {
     expect(ticket!.version).toEqual(data.version);
 
     expect(message.ack).toHaveBeenCalled();
+  });
+
+  it('does not ack the event if event version is greater than current version plus one', async () => {
+    expect.assertions(2);
+
+    data.version = 5;
+
+    try {
+      await listener.onMessage(data, message);
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+
+    expect(message.ack).not.toHaveBeenCalled();
   });
 });

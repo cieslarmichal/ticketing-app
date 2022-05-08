@@ -79,7 +79,7 @@ describe(`Create order`, () => {
     const title = 'title';
     const price = 50;
 
-    const ticket = Ticket.build({ title, price });
+    const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title, price });
     await ticket.save();
 
     const order = Order.build({ userId: id, status: OrderStatus.Created, expiresAt: new Date(), ticket });
@@ -102,7 +102,7 @@ describe(`Create order`, () => {
     const title = 'title';
     const price = 50;
 
-    const ticket = Ticket.build({ title, price });
+    const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title, price });
     await ticket.save();
 
     const response = await request(server.instance).post(baseUrl).set('Cookie', cookie).send({ ticketId: ticket.id });

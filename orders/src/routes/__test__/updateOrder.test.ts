@@ -44,7 +44,7 @@ describe(`Update order`, () => {
     const title = 'title';
     const price = 50;
 
-    const ticket = Ticket.build({ title, price });
+    const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title, price });
     await ticket.save();
 
     const order = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket });
@@ -104,7 +104,7 @@ describe(`Update order`, () => {
     const title = 'title';
     const price = 50;
 
-    const ticket = Ticket.build({ title, price });
+    const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title, price });
     await ticket.save();
 
     const order = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket });
@@ -129,7 +129,7 @@ describe(`Update order`, () => {
     const title = 'title';
     const price = 50;
 
-    const ticket = Ticket.build({ title, price });
+    const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title, price });
     await ticket.save();
 
     const order = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket });
@@ -157,7 +157,7 @@ describe(`Update order`, () => {
     const title = 'title';
     const price = 50;
 
-    const ticket = Ticket.build({ title, price });
+    const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title, price });
     await ticket.save();
 
     const order = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket });

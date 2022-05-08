@@ -5,6 +5,7 @@ import { App } from '../../app';
 import { signUp } from '../../test';
 import { Order, Ticket } from '../../models';
 import { OrderStatus } from '@cieslar-ticketing-common/common';
+import mongoose from 'mongoose';
 
 const baseUrl = '/api/orders';
 
@@ -39,19 +40,19 @@ describe(`Get orders`, () => {
     const title1 = 'title1';
     const price1 = 50;
 
-    const ticket1 = Ticket.build({ title: title1, price: price1 });
+    const ticket1 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: title1, price: price1 });
     await ticket1.save();
 
     const title2 = 'title2';
     const price2 = 60;
 
-    const ticket2 = Ticket.build({ title: title2, price: price2 });
+    const ticket2 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: title2, price: price2 });
     await ticket2.save();
 
     const title3 = 'title3';
     const price3 = 70;
 
-    const ticket3 = Ticket.build({ title: title3, price: price3 });
+    const ticket3 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: title3, price: price3 });
     await ticket3.save();
 
     const order1 = Order.build({ userId, status: OrderStatus.Created, expiresAt: new Date(), ticket: ticket1 });
