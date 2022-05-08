@@ -2,6 +2,7 @@ import { EventBusListener, Subject, OrderCreatedEvent } from '@cieslar-ticketing
 import { Message } from 'node-nats-streaming';
 import { TicketNotFoundError } from '../../errors';
 import { Ticket } from '../../models';
+import { TicketUpdatedPublisher } from '../publishers';
 import { queueGroupName } from './queueGroupName';
 
 export class OrderCreatedListener extends EventBusListener<OrderCreatedEvent> {
@@ -23,6 +24,15 @@ export class OrderCreatedListener extends EventBusListener<OrderCreatedEvent> {
     ticket.orderId = orderId;
 
     await ticket.save();
+
+    await new TicketUpdatedPublisher(this.client).publish({
+      id: ticket.id,
+      version: ticket.version,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      orderId: ticket.orderId,
+    });
 
     message.ack();
   }

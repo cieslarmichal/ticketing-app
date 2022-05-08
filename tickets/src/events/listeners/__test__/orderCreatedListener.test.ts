@@ -23,7 +23,7 @@ describe(`Receiving order created event message`, () => {
     await ticket.save();
 
     data = {
-      id: ticket.id,
+      id: new mongoose.Types.ObjectId().toHexString(),
       version: 0,
       status: OrderStatus.Created,
       userId: ticket.userId,
