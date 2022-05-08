@@ -1,36 +1,37 @@
-import { OrderCreatedEvent, OrderStatus } from '@cieslar-ticketing-common/common';
+import { OrderCancelledEvent } from '@cieslar-ticketing-common/common';
 import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
 import { TicketNotFoundError } from '../../../errors';
 import { Ticket, TicketDocument } from '../../../models';
 import { natsClient } from '../../../shared';
-import { OrderCreatedListener } from '../orderCreatedListener';
+import { OrderCancelledListener } from '../orderCancelledListener';
 
-describe(`Receiving order created event message`, () => {
-  let listener: OrderCreatedListener;
+describe(`Receiving order cancelled event message`, () => {
+  let listener: OrderCancelledListener;
   let ticket: TicketDocument;
-  let data: OrderCreatedEvent['data'];
+  let data: OrderCancelledEvent['data'];
   let message: Message;
 
   beforeEach(async () => {
-    listener = new OrderCreatedListener(natsClient.client);
+    listener = new OrderCancelledListener(natsClient.client);
+
+    const orderId = new mongoose.Types.ObjectId().toHexString();
 
     ticket = Ticket.build({
       title: 'concert',
       price: 10,
       userId: 'userId',
     });
+
+    ticket.orderId = orderId;
+
     await ticket.save();
 
     data = {
-      id: new mongoose.Types.ObjectId().toHexString(),
+      id: orderId,
       version: 0,
-      status: OrderStatus.Created,
-      userId: ticket.userId,
-      expiresAt: 'date',
       ticket: {
         id: ticket.id,
-        price: ticket.price,
       },
     };
 
@@ -40,13 +41,13 @@ describe(`Receiving order created event message`, () => {
     };
   });
 
-  it('assigns orderId to corresponding ticket document and acks the message', async () => {
+  it('clears orderId from corresponding ticket document and acks the message', async () => {
     await listener.onMessage(data, message);
 
     const updatedTicket = await Ticket.findById(ticket.id);
 
     expect(updatedTicket).toBeDefined();
-    expect(updatedTicket!.orderId).toEqual(data.id);
+    expect(updatedTicket!.orderId).not.toBeDefined();
 
     expect(message.ack).toHaveBeenCalled();
   });
@@ -60,7 +61,7 @@ describe(`Receiving order created event message`, () => {
 
     const actualUpdatedTicketData = JSON.parse(natsClientPublishMock.mock.calls[0][1]);
 
-    expect(actualUpdatedTicketData.orderId).toEqual(data.id);
+    expect(actualUpdatedTicketData.orderId).not.toBeDefined();
   });
 
   it('throws not found error when ticketId from event message is not found', async () => {
