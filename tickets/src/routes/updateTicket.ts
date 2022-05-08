@@ -4,7 +4,7 @@ import { validateRequestMiddleware } from '@cieslar-ticketing-common/common';
 import { body } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 import { Ticket } from '../models';
-import { TicketNotFoundError, UserHasNoOwnershipOverTicket } from '../errors';
+import { TicketNotFoundError, TicketReservedError, UserHasNoOwnershipOverTicket } from '../errors';
 import mongoose from 'mongoose';
 import { TicketUpdatedPublisher } from '../events';
 import { natsClient } from '../shared';
@@ -31,6 +31,10 @@ router.put(
 
     if (!ticket) {
       throw new TicketNotFoundError();
+    }
+
+    if (ticket.orderId) {
+      throw new TicketReservedError();
     }
 
     if (req.currentUser?.id !== ticket.userId) {

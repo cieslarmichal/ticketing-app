@@ -113,6 +113,33 @@ describe(`Update ticket`, () => {
     expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
   });
 
+  it('returns unprocessable entity when ticket is reserved', async () => {
+    const title = 'title';
+    const price = 50;
+    const userId = 'userId';
+    const orderId = new mongoose.Types.ObjectId().toHexString();
+
+    const ticket = Ticket.build({ title, price, userId });
+
+    ticket.orderId = orderId;
+
+    await ticket.save();
+
+    const email = 'email@gmail.com';
+
+    const cookie = signUp({ email, id: userId });
+
+    const updatedTitle = 'title2';
+    const updatedPrice = 70;
+
+    const response = await request(server.instance)
+      .put(`${baseUrl}/${ticket.id}`)
+      .set('Cookie', cookie)
+      .send({ title: updatedTitle, price: updatedPrice });
+
+    expect(response.statusCode).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
+  });
+
   it('updates and returns a ticket when ticket with given id exists', async () => {
     const title = 'title';
     const price = 50;

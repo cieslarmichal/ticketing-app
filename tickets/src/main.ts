@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { App } from './app';
 import { natsClient } from './shared';
 import { Server } from './server';
+import { OrderCancelledListener, OrderCreatedListener } from './events';
 
 async function main() {
   if (!process.env.JWT_SECRET) {
@@ -34,6 +35,9 @@ async function main() {
 
     process.on('SIGINT', () => natsClient.client.close());
     process.on('SIGTERM', () => natsClient.client.close());
+
+    new OrderCreatedListener(natsClient.client).listen();
+    new OrderCancelledListener(natsClient.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log(`Connected to ${process.env.MONGO_URI}`);
