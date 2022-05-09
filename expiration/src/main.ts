@@ -1,3 +1,4 @@
+import { OrderCreatedListener } from './events';
 import { natsClient } from './shared';
 
 async function main() {
@@ -23,6 +24,8 @@ async function main() {
 
     process.on('SIGINT', () => natsClient.client.close());
     process.on('SIGTERM', () => natsClient.client.close());
+
+    new OrderCreatedListener(natsClient.client).listen();
   } catch (error) {
     console.log(error);
   }
