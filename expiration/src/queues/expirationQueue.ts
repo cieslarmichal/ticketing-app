@@ -1,4 +1,6 @@
 import Queue from 'bull';
+import { natsClient } from '../shared';
+import { ExpirationCompletePublisher } from '../events';
 
 interface Payload {
   orderId: string;
@@ -11,7 +13,11 @@ const expirationQueue = new Queue<Payload>('order:expiration', {
 });
 
 expirationQueue.process(async (job) => {
-  console.log(job.data);
+  const {
+    data: { orderId },
+  } = job;
+
+  new ExpirationCompletePublisher(natsClient.client).publish({ orderId });
 });
 
 export { expirationQueue };
