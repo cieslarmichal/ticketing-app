@@ -8,9 +8,11 @@ export class OrderCreatedListener extends EventBusListener<OrderCreatedEvent> {
   readonly queueGroupName = queueGroupName;
 
   async onMessage(data: OrderCreatedEvent['data'], message: Message) {
-    const { id: orderId } = data;
+    const { id: orderId, expiresAt } = data;
 
-    await expirationQueue.add({ orderId });
+    const delay = new Date(expiresAt).getTime() - new Date().getTime();
+
+    await expirationQueue.add({ orderId }, { delay });
 
     message.ack();
   }
