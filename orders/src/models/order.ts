@@ -10,7 +10,7 @@ interface OrderAttributes {
   ticket: TicketDocument;
 }
 
-interface OrderDocument extends mongoose.Document {
+export interface OrderDocument extends mongoose.Document {
   userId: string;
   status: OrderStatus;
   expiresAt: Date;
