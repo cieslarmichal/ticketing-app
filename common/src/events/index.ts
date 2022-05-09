@@ -6,4 +6,5 @@ export * from './ticketCreatedEvent';
 export * from './ticketUpdatedEvent';
 export * from './orderCreatedEvent';
 export * from './orderCancelledEvent';
+export * from './expirationCompleteEvent';
 export * from './types';
