@@ -2,6 +2,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
 jest.mock('../shared/natsClient');
+jest.mock('../shared/stripe');
 
 let mongo: MongoMemoryServer;
 

@@ -6,6 +6,7 @@ import { signUp } from '../../test';
 import { Order } from '../../models';
 import mongoose from 'mongoose';
 import { OrderStatus } from '@cieslar-ticketing-common/common';
+import { stripe } from '../../shared';
 
 const baseUrl = '/api/payments';
 
@@ -167,5 +168,13 @@ describe(`Create payment`, () => {
 
     expect(response.body.userId).toBe(userId);
     expect(response.body.id).toBe(orderId);
+
+    const stripeChargesCreateMock = stripe.charges.create as jest.Mock;
+
+    const actualChargeData = stripeChargesCreateMock.mock.calls[0][0];
+
+    expect(actualChargeData.currency).toEqual('usd');
+    expect(actualChargeData.amount).toEqual(order.price * 1000);
+    expect(actualChargeData.source).toEqual(token);
   });
 });

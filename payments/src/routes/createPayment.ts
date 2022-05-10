@@ -10,6 +10,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Order } from '../models';
 import mongoose from 'mongoose';
 import { OrderCancelledError, OrderNotFoundError, UserHasNoOwnershipOverOrder } from '../errors';
+import { stripe } from '../shared';
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post(
     validateRequestMiddleware,
   ],
   async (req: Request, res: Response) => {
-    const { orderId } = req.body;
+    const { token, orderId } = req.body;
 
     if (!mongoose.isValidObjectId(orderId)) {
       throw new OrderNotFoundError();
@@ -42,6 +43,12 @@ router.post(
     if (order.status === OrderStatus.Cancelled) {
       throw new OrderCancelledError();
     }
+
+    await stripe.charges.create({
+      currency: 'usd',
+      amount: order.price * 1000,
+      source: token,
+    });
 
     res.status(StatusCodes.CREATED).send(order);
   },
