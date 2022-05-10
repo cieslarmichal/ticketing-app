@@ -1,6 +1,6 @@
 import { EventBusListener, Subject, OrderCreatedEvent } from '@cieslar-ticketing-common/common';
 import { Message } from 'node-nats-streaming';
-import { expirationQueue } from 'src/queues';
+import { expirationQueue } from '../../queues';
 import { queueGroupName } from './queueGroupName';
 
 export class OrderCreatedListener extends EventBusListener<OrderCreatedEvent> {
