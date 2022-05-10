@@ -1,2 +1,2 @@
 export * from './natsClient';
-export * from './stripe';
+export * from './stripeClient';

@@ -5,6 +5,10 @@ import { Server } from './server';
 import { OrderCancelledListener, OrderCreatedListener } from './events';
 
 async function main() {
+  if (!process.env.STRIPE_SECRET) {
+    throw new Error('JWT_SECRET is not defined');
+  }
+
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined');
   }

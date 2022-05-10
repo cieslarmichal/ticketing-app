@@ -1,14 +1,14 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+import { ConfigLoader } from './configLoader';
 
 jest.mock('../shared/natsClient');
-jest.mock('../shared/stripe');
 
 let mongo: MongoMemoryServer;
 
-beforeAll(async () => {
-  process.env.JWT_SECRET = 'asdffg';
+ConfigLoader.loadConfig();
 
+beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
 
   const mongoUri = mongo.getUri();

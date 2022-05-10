@@ -5,6 +5,8 @@ import { Order } from '../../../models';
 import { natsClient } from '../../../shared';
 import { OrderCreatedListener } from '../orderCreatedListener';
 
+jest.mock('../../../shared/stripeClient');
+
 describe(`Receiving order created event message`, () => {
   let listener: OrderCreatedListener;
   let data: OrderCreatedEvent['data'];

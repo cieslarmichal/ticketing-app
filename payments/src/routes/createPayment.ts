@@ -10,7 +10,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Order } from '../models';
 import mongoose from 'mongoose';
 import { OrderCancelledError, OrderNotFoundError, UserHasNoOwnershipOverOrder } from '../errors';
-import { stripe } from '../shared';
+import { stripeClient } from '../shared';
 
 const router = express.Router();
 
@@ -44,9 +44,9 @@ router.post(
       throw new OrderCancelledError();
     }
 
-    await stripe.charges.create({
+    await stripeClient.charges.create({
       currency: 'usd',
-      amount: order.price * 1000,
+      amount: order.price * 100,
       source: token,
     });
 

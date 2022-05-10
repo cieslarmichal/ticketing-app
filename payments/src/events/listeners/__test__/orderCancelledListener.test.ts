@@ -6,6 +6,8 @@ import { Order, OrderDocument } from '../../../models';
 import { natsClient } from '../../../shared';
 import { OrderCancelledListener } from '../orderCancelledListener';
 
+jest.mock('../../../shared/stripeClient');
+
 describe(`Receiving order cancelled event message`, () => {
   let listener: OrderCancelledListener;
   let order: OrderDocument;
