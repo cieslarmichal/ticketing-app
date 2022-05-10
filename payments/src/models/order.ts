@@ -4,7 +4,7 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface OrderAttributes {
   id: string;
-  version: string;
+  version: number;
   status: OrderStatus;
   userId: string;
   price: number;
