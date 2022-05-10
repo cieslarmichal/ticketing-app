@@ -7,7 +7,7 @@ import {
 } from '@cieslar-ticketing-common/common';
 import { body } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
-import { Order } from '../models';
+import { Order, Payment } from '../models';
 import mongoose from 'mongoose';
 import { OrderCancelledError, OrderNotFoundError, UserHasNoOwnershipOverOrder } from '../errors';
 import { stripeClient } from '../shared';
@@ -44,11 +44,17 @@ router.post(
       throw new OrderCancelledError();
     }
 
-    await stripeClient.charges.create({
+    const charge = await stripeClient.charges.create({
       currency: 'usd',
       amount: order.price * 100,
       source: token,
     });
+
+    const payment = Payment.build({
+      orderId,
+      stripeId: charge.id,
+    });
+    await payment.save();
 
     res.status(StatusCodes.CREATED).send(order);
   },

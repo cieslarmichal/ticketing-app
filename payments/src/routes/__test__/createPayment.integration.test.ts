@@ -2,7 +2,7 @@ import request from 'supertest';
 import { Server } from '../../server';
 import { App } from '../../app';
 import { signUp } from '../../test';
-import { Order } from '../../models';
+import { Order, Payment } from '../../models';
 import mongoose from 'mongoose';
 import { OrderStatus } from '@cieslar-ticketing-common/common';
 import { stripeClient } from '../../shared';
@@ -26,7 +26,7 @@ describe(`Create payment integration`, () => {
     server.close();
   });
 
-  it('creates stripe payment', async () => {
+  it('creates payment document and stripe payment', async () => {
     const email = 'email@gmail.com';
     const userId = '1';
 
@@ -56,5 +56,12 @@ describe(`Create payment integration`, () => {
 
     expect(charge).toBeDefined();
     expect(charge!.currency).toEqual('usd');
+
+    const payment = await Payment.findOne({
+      orderId: order.id,
+      stripeId: charge!.id,
+    });
+
+    expect(payment).not.toBeNull();
   });
 });

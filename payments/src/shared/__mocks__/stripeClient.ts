@@ -1,5 +1,7 @@
 export const stripeClient = {
   charges: {
-    create: jest.fn().mockResolvedValue({}),
+    create: jest.fn().mockImplementation(() => {
+      return { id: '123' };
+    }),
   },
 };
