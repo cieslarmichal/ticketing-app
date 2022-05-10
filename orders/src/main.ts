@@ -2,7 +2,12 @@ import mongoose from 'mongoose';
 import { App } from './app';
 import { natsClient } from './shared';
 import { Server } from './server';
-import { ExpirationCompleteListener, TicketCreatedListener, TicketUpdatedListener } from './events';
+import {
+  ExpirationCompleteListener,
+  PaymentCreatedListener,
+  TicketCreatedListener,
+  TicketUpdatedListener,
+} from './events';
 
 async function main() {
   if (!process.env.JWT_SECRET) {
@@ -39,6 +44,7 @@ async function main() {
     new TicketCreatedListener(natsClient.client).listen();
     new TicketUpdatedListener(natsClient.client).listen();
     new ExpirationCompleteListener(natsClient.client).listen();
+    new PaymentCreatedListener(natsClient.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log(`Connected to ${process.env.MONGO_URI}`);

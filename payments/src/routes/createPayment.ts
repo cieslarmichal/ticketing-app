@@ -10,7 +10,8 @@ import { StatusCodes } from 'http-status-codes';
 import { Order, Payment } from '../models';
 import mongoose from 'mongoose';
 import { OrderCancelledError, OrderNotFoundError, UserHasNoOwnershipOverOrder } from '../errors';
-import { stripeClient } from '../shared';
+import { natsClient, stripeClient } from '../shared';
+import { PaymentCreatedPublisher } from '../events';
 
 const router = express.Router();
 
@@ -56,7 +57,13 @@ router.post(
     });
     await payment.save();
 
-    res.status(StatusCodes.CREATED).send(order);
+    await new PaymentCreatedPublisher(natsClient.client).publish({
+      id: payment.id,
+      orderId: payment.orderId,
+      stripeId: payment.stripeId,
+    });
+
+    res.status(StatusCodes.CREATED).send(payment);
   },
 );
 
