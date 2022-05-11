@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
+      STRIPE_SECRET: ${{ ticketing-env.STRIPE_SECRET }}
       JWT_SECRET: asdffg
     steps:
       - uses: actions/checkout@v2
