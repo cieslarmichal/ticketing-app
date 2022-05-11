@@ -168,8 +168,8 @@ describe(`Create payment`, () => {
     expect(orders[0].userId).toBe(userId);
     expect(orders[0]._id.toString()).toBe(orderId);
 
-    expect(response.body.userId).toBe(userId);
-    expect(response.body.id).toBe(orderId);
+    expect(response.body.orderId).toBe(orderId);
+    expect(response.body.stripeId).toBe('123');
 
     const stripeChargesCreateMock = stripeClient.charges.create as jest.Mock;
 
