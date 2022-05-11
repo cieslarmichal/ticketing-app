@@ -7,7 +7,7 @@ export const useRequest = ({ url, method, body, onSuccess }) => {
   const doRequest = async (properties = {}) => {
     try {
       setErrors(null);
-      const response = await axios[method](url, { ...body, ...props });
+      const response = await axios[method](url, { ...body, ...properties });
       if (onSuccess) {
         onSuccess(response.data);
       }
