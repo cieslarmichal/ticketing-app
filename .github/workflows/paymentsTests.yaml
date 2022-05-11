@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      STRIPE_SECRET: sk_test_51KxrqzCU70lsCSQ2iwCxRKUMDDXfxPGMAxCIDcRKwzVguBEpigNjIWJNAOCl9AxJQarulXrh7NhRzY2W6NnuB9eI00GfnmZ5Q6
+      STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
       JWT_SECRET: asdffg
     steps:
       - uses: actions/checkout@v2
