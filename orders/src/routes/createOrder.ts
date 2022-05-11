@@ -13,7 +13,7 @@ import { OrderAlreadyExistsError, TicketNotFoundError } from '../errors';
 import { OrderCreatedPublisher } from '../events';
 import { natsClient } from '../shared';
 
-const ORDER_EXPIRATION_TIME_IN_SECONDS = 15 * 60;
+const ORDER_EXPIRATION_TIME_IN_SECONDS = 60;
 
 const router = express.Router();
 

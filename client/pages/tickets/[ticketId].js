@@ -6,8 +6,8 @@ const GetTicket = ({ ticket }) => {
     url: '/api/orders',
     method: 'post',
     body: { ticketId: ticket.id },
-    onSuccess: () => {
-      Router.push('/');
+    onSuccess: (order) => {
+      Router.push('/orders/[orderId]', `/orders/${order.id}`);
     },
   });
 
