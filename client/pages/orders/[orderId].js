@@ -1,8 +1,9 @@
 import Router from 'next/router';
 import { useRequest } from '../../hooks';
 import { useEffect, useState } from 'react';
+import StripeCheckout from 'react-stripe-checkout';
 
-const GetOrder = ({ order }) => {
+const GetOrder = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const GetOrder = ({ order }) => {
   if (timeLeft < 0) {
     return (
       <div>
-        <h4>Time left to pay: {timeLeft} seconds</h4>
+        <h4>Order expired</h4>
       </div>
     );
   }
@@ -40,9 +41,13 @@ const GetOrder = ({ order }) => {
     <div>
       <h4>Time left to pay: {timeLeft} seconds</h4>
       {errors}
-      <button onClick={doRequest} className="btn btn-primary">
-        Purchase
-      </button>
+      <StripeCheckout
+        token={({ id }) => doRequest({ token: id })}
+        stripeKey="pk_test_51KxrqzCU70lsCSQ2jyxVhF4fuJtuFhaw4NseVKm7xgaCUiBC7D2K7Fsb7dUHG8cvKeTBIvQXUW6xHiLWsFusTNvM000mXlTY7L"
+        amount={order.ticket.price * 100}
+        email={currentUser.email}
+      />
+      {errors}
     </div>
   );
 };
