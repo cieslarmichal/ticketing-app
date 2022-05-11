@@ -25,7 +25,7 @@ const GetOrder = ({ order, currentUser }) => {
     method: 'post',
     body: { orderId: order.id },
     onSuccess: () => {
-      Router.push('/');
+      Router.push('/orders/');
     },
   });
 
