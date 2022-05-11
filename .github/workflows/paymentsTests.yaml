@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: test
     env:
       STRIPE_SECRET: ${{ ticketing-env.STRIPE_SECRET }}
       JWT_SECRET: asdffg
