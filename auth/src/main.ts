@@ -3,6 +3,8 @@ import { App } from './app';
 import { Server } from './server';
 
 async function main() {
+  console.log('Starting auth microservice');
+
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined');
   }
