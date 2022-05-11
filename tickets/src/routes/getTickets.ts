@@ -6,7 +6,7 @@ import { Ticket } from '../models';
 const router = express.Router();
 
 router.get('/api/tickets', [currentUserMiddleware, authMiddleware], async (req: Request, res: Response) => {
-  const tickets = await Ticket.find({});
+  const tickets = await Ticket.find({ orderId: undefined });
 
   res.status(StatusCodes.OK).send(tickets);
 });
